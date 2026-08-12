@@ -92,7 +92,7 @@
       opacity: 0;
     }
 
-    /* HIGH-CONTRAST TOP DOOR TEXT */
+    /* HIGH-CONTRAST TOP DOOR TEXT (+8% Font Size) */
     .door-header-text {
       position: absolute;
       top: 6%;
@@ -100,7 +100,7 @@
       transform: translateX(-50%);
       -webkit-transform: translateX(-50%);
       font-family: 'Ramabhadra', serif;
-      font-size: 1.6rem;
+      font-size: 1.73rem;
       font-weight: 700;
       color: #4a0505;
       text-align: center;
@@ -117,7 +117,7 @@
     .door-header-text span {
       display: block;
       font-family: 'NTR', serif;
-      font-size: 1.15rem;
+      font-size: 1.24rem;
       color: #7a0c0c;
       font-weight: 700;
       margin-top: 6px;
@@ -125,7 +125,7 @@
       text-shadow: 0 0 10px rgba(255, 252, 240, 0.95), 0 0 15px rgba(255, 245, 210, 0.9);
     }
 
-    /* PLAIN TEXT IN MIDDLE OF DOOR */
+    /* PLAIN TEXT IN MIDDLE OF DOOR (+8% Font Size) */
     .door-middle-text {
       position: absolute;
       top: 62%;
@@ -133,7 +133,7 @@
       transform: translate(-50%, -50%);
       -webkit-transform: translate(-50%, -50%);
       font-family: 'Ramabhadra', serif;
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: #4a0505;
       text-align: center;
@@ -150,7 +150,7 @@
     .door-middle-text span {
       display: block;
       font-family: 'NTR', serif;
-      font-size: 1rem;
+      font-size: 1.08rem;
       color: #7a0c0c;
       font-weight: 700;
       margin-bottom: 6px;
@@ -158,6 +158,7 @@
       text-shadow: 0 0 10px rgba(255, 252, 240, 0.95), 0 0 15px rgba(255, 245, 210, 0.9);
     }
 
+    /* TAP HINT (+8% Font Size) */
     .tap-hint {
       position: absolute;
       bottom: 9%;
@@ -169,7 +170,7 @@
       padding: 12px 30px;
       border-radius: 30px;
       font-family: 'NTR', serif;
-      font-size: 1.05rem;
+      font-size: 1.13rem;
       font-weight: 700;
       letter-spacing: 1px;
       border: 1px solid #d4af37;
@@ -528,10 +529,10 @@
     }
 
     @media (max-width: 480px) {
-      .door-header-text { font-size: 1.35rem; top: 6%; }
-      .door-header-text span { font-size: 1rem; }
-      .door-middle-text { font-size: 1.15rem; }
-      .door-middle-text span { font-size: 0.88rem; }
+      .door-header-text { font-size: 1.46rem; top: 6%; }
+      .door-header-text span { font-size: 1.08rem; }
+      .door-middle-text { font-size: 1.24rem; }
+      .door-middle-text span { font-size: 0.95rem; }
       .family-title { font-size: 1.65rem; }
       .highlight-title { font-size: 1.7rem; }
       .content-area { gap: 28px; }
@@ -561,7 +562,7 @@
     <div class="door door-left"></div>
     <div class="door door-right"></div>
     
-    <div class="tap-hint" id="tapHint">ఇక్కడ తాకండి</div>
+    <div class="tap-hint" id="tapHint">తెరవడానికి ఇక్కడ తాకండి</div>
   </div>
 
   <!-- FIXED STAY-STILL BACKGROUND -->
@@ -726,5 +727,4 @@
         }
 
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference 
+        const hours = Math.floor((difference % (1000 * 60 * 60 *
