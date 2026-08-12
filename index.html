@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>గృహప్రవేశ ఆహ్వాన పత్రిక - పెనకచెర్ల పరివారం</title>
+  
+  <!-- Traditional & Telugu Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Marcellus&family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=Rozha+One&family=Ramabhadra&family=NTR&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      font-family: 'NTR', 'Montserrat', sans-serif;
+      background-color: #0f0704;
+      color: #3b1408;
+      overflow: hidden;
+    }
+
+    /* ----------------------------------
+       FULLSCREEN 3D DOOR OVERLAY
+    ---------------------------------- */
+    #door-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 9999;
+      perspective: 1500px;
+      display: flex;
+      cursor: pointer;
+      overflow: hidden;
+      transform-origin: center center;
+      transition: transform 1.6s ease-in-out, opacity 0.8s ease;
+    }
+
+    /* Smooth 30% Zoom */
+    #door-wrapper.zooming {
+      transform: scale(1.3);
+    }
+
+    .door {
+      width: 50vw;
+      height: 100vh;
+      background-image: url('1000197031.jpg');
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      transition: transform 2.2s cubic-bezier(0.35, 0, 0.25, 1);
+      position: relative;
+    }
+
+    .door-left {
+      background-position: left center;
+      transform-origin: left center;
+    }
+
+    .door-right {
+      background-position: right center;
+      transform-origin: right center;
+    }
+
+    /* 3D Door Opening */
+    #door-wrapper.open .door-left {
+      transform: rotateY(-115deg);
+    }
+
+    #door-wrapper.open .door-right {
+      transform: rotateY(115deg);
+    }
+
+    #door-wrapper.fade-out {
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    /* HIGH-CONTRAST TOP DOOR TEXT */
+    .door-header-text {
+      position: absolute;
+      top: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #4a0505;
+      text-align: center;
+      width: 90%;
+      max-width: 480px;
+      z-index: 10001;
+      letter-spacing: 1px;
+      line-height: 1.35;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      text-shadow: 0 0 12px rgba(255, 252, 240, 0.95), 0 0 20px rgba(255, 245, 210, 0.9), 1px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .door-header-text span {
+      display: block;
+      font-family: 'NTR', serif;
+      font-size: 1.15rem;
+      color: #7a0c0c;
+      font-weight: 700;
+      margin-top: 6px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255, 252, 240, 0.95), 0 0 15px rgba(255, 245, 210, 0.9);
+    }
+
+    /* PLAIN TEXT IN MIDDLE OF DOOR (NO BOX/CARD WRAPPER) */
+    .door-middle-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #4a0505;
+      text-align: center;
+      width: 90%;
+      max-width: 480px;
+      z-index: 10001;
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      text-shadow: 0 0 12px rgba(255, 252, 240, 0.95), 0 0 20px rgba(255, 245, 210, 0.9), 1px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .door-middle-text span {
+      display: block;
+      font-family: 'NTR', serif;
+      font-size: 1rem;
+      color: #7a0c0c;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(255, 252, 240, 0.95), 0 0 15px rgba(255, 245, 210, 0.9);
+    }
+
+    .tap-hint {
+      position: absolute;
+      bottom: 9%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #7a0c0c, #4a0505);
+      color: #fff3d1;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-family: 'NTR', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border: 1px solid #d4af37;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+      animation: pulse 2s infinite;
+      z-index: 10000;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.06); }
+    }
+
+    /* ----------------------------------
+       FIXED STAY-STILL BACKGROUND
+    ---------------------------------- */
+    #fixed-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: url('1000197047.jpg') no-repeat center top / cover;
+      z-index: 1;
+    }
+
+    /* ----------------------------------
+       FLOATING ACTION BUTTON (BOTTOM RIGHT)
+    ---------------------------------- */
+    .fab-celebrate {
+      position: fixed;
+      bottom: 22px;
+      right: 22px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4af37, #b8860b);
+      color: #ffffff;
+      border: 2px solid #fff5da;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      z-index: 900;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .fab-celebrate:active {
+      transform: scale(0.9);
+    }
+
+    /* ----------------------------------
+       MIDDLE 70% VERTICAL SCROLL ZONE
+    ---------------------------------- */
+    .scroll-overlay {
+      position: fixed;
+      top: 15vh;
+      height: 70vh;
+      left: 0;
+      right: 0;
+      z-index: 2;
+      overflow-y: hidden;
+      display: flex;
+      justify-content: center;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-overlay::-webkit-scrollbar {
+      display: none;
+    }
+
+    .content-area {
+      width: 100%;
+      max-width: 500px;
+      padding: 20px 25px 60px 25px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 32px;
+    }
+
+    /* TYPOGRAPHY STYLES */
+    .shlok-text {
+      font-family: 'NTR', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #7a0c0c;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .family-title {
+      font-family: 'Ramabhadra', serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #5c0d0d;
+      margin-top: 6px;
+      line-height: 1.25;
+      text-shadow: 1px 1px 2px rgba(255, 235, 200, 0.9);
+    }
+
+    .highlight-container {
+      margin: 2px 0;
+    }
+
+    .highlight-title {
+      font-family: 'Ramabhadra', serif;
+      font-size: 2.1rem;
+      color: #8b1a1a;
+      letter-spacing: 1px;
+      line-height: 1.25;
+      text-shadow: 1px 1px 0px #ffd700, 0 2px 8px rgba(122, 12, 12, 0.2);
+    }
+
+    .flourish-divider {
+      color: #d4af37;
+      font-size: 1.2rem;
+      margin: 4px 0;
+    }
+
+    .invitation-desc {
+      font-family: 'NTR', serif;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #3b1408;
+      max-width: 440px;
+      font-weight: 600;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
+    }
+
+    .date-text {
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #7a0c0c;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    /* COUNTDOWN TIMER STYLES */
+    .timer-container {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: -10px;
+    }
+
+    .timer-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 253, 247, 0.85);
+      border: 1px solid rgba(212, 175, 55, 0.7);
+      border-radius: 12px;
+      padding: 6px 12px;
+      min-width: 58px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    }
+
+    .timer-value {
+      font-family: 'Montserrat', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #8b1a1a;
+    }
+
+    .timer-label {
+      font-family: 'NTR', serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #5c0d0d;
+      margin-top: 2px;
+    }
+
+    /* SCROLL INDICATOR ANIMATION */
+    .scroll-hint-indicator {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-family: 'NTR', serif;
+      font-size: 1rem;
+      color: #7a0c0c;
+      font-weight: 700;
+      animation: bounce 2s infinite;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .scroll-arrow {
+      font-size: 1.2rem;
+      color: #8b1a1a;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(6px);
+      }
+      60% {
+        transform: translateY(3px);
+      }
+    }
+
+    /* PROGRAM SCHEDULE & PARTIAL DIVIDERS */
+    .schedule-block {
+      width: 100%;
+    }
+
+    .section-heading {
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.6rem;
+      color: #7a0c0c;
+      margin-bottom: 18px;
+      font-weight: 700;
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+    }
+
+    .schedule-item {
+      margin: 6px 0;
+    }
+
+    .schedule-divider {
+      width: 35%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(139, 26, 26, 0.45), transparent);
+      margin: 12px auto;
+    }
+
+    .event-time {
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #8b1a1a;
+    }
+
+    .event-name {
+      font-family: 'NTR', serif;
+      font-size: 1.15rem;
+      color: #2c140a;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    /* VENUE & MAP */
+    .venue-block {
+      width: 100%;
+    }
+
+    .venue-address {
+      font-family: 'NTR', serif;
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: #3b1408;
+      margin: 8px 0 20px 0;
+      font-weight: 600;
+    }
+
+    .btn-map {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #8b1a1a, #5c0d0d);
+      color: #fff8eb;
+      text-decoration: none;
+      padding: 13px 28px;
+      border-radius: 30px;
+      font-family: 'NTR', serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      border: 1px solid #d4af37;
+      box-shadow: 0 6px 18px rgba(139, 26, 26, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-map:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(139, 26, 26, 0.45);
+    }
+
+    /* HOST CONTACT & SECOND PAGE DETAILS */
+    .contact-block {
+      width: 100%;
+    }
+
+    .contact-label {
+      font-family: 'Ramabhadra', serif;
+      font-size: 0.95rem;
+      color: #8b1a1a;
+      letter-spacing: 0.5px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .host-name-clean {
+      font-family: 'Ramabhadra', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #7a0c0c;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+      text-shadow: 0 1px 2px rgba(255, 235, 200, 0.8);
+    }
+
+    .host-name-clean div {
+      display: block;
+    }
+
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .phone-btn {
+      color: #7a0c0c;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      background: rgba(255, 253, 247, 0.9);
+      padding: 10px 22px;
+      border-radius: 25px;
+      border: 1px solid #d4af37;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* ANIMATED PETAL STYLING */
+    .falling-petal {
+      position: fixed;
+      top: -30px;
+      z-index: 9998;
+      pointer-events: none;
+      animation: fallLinear linear forwards;
+    }
+
+    @keyframes fallLinear {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(105vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .door-header-text { font-size: 1.35rem; top: 6%; }
+      .door-header-text span { font-size: 1rem; }
+      .door-middle-text { font-size: 1.15rem; }
+      .door-middle-text span { font-size: 0.88rem; }
+      .family-title { font-size: 1.65rem; }
+      .highlight-title { font-size: 1.7rem; }
+      .content-area { gap: 28px; }
+      .host-name-clean { font-size: 1.1rem; }
+      .timer-unit { min-width: 50px; padding: 5px 8px; }
+      .timer-value { font-size: 1rem; }
+      .fab-celebrate { bottom: 18px; right: 18px; width: 48px; height: 48px; font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen 3D Door Overlay -->
+  <div id="door-wrapper" onclick="openDoor()">
+    <div class="door-header-text" id="doorHeaderText">
+      పెనకచెర్ల వారి
+      <span>నూతన గృహప్రవేశ ఆహ్వానం</span>
+    </div>
+
+    <!-- PLAIN TEXT IN MIDDLE OF DOOR (NO BOX/CARD WRAPPER) -->
+    <div class="door-middle-text" id="doorMiddleText">
+      <span>ఆహ్వానించువారు</span>
+      శ్రీ పి. చిన్నమాదన్న యాదవ్<br>
+      శ్రీమతి పి. నాగమణి
+    </div>
+
+    <div class="door door-left"></div>
+    <div class="door door-right"></div>
+    
+    <div class="tap-hint" id="tapHint">తెరవడానికి ఇక్కడ తాకండి</div>
+  </div>
+
+  <!-- FIXED STAY-STILL BACKGROUND -->
+  <div id="fixed-bg"></div>
+
+  <!-- FLOATING PARTY SHOWER BUTTON (BOTTOM RIGHT) -->
+  <button class="fab-celebrate" onclick="showerBlessings()" title="Shower Blessings">🎉</button>
+
+  <!-- SCROLLING ZONE CONSTRAINED TO MIDDLE 70% HEIGHT -->
+  <div class="scroll-overlay" id="scrollOverlay">
+    <div class="content-area">
+      
+      <!-- Top Shlok & Family Name -->
+      <div>
+        <div class="shlok-text">|| శ్రీ మాధవరాజలస్వామి ప్రసన్నః ||</div>
+        <div class="family-title">పెనకచెర్ల వారి</div>
+      </div>
+
+      <!-- INVITATION HEADER -->
+      <div class="highlight-container">
+        <div class="flourish-divider">✦ ✦ ✦</div>
+        <div class="highlight-title">నూతన గృహప్రవేశ ఆహ్వానం</div>
+        <div class="flourish-divider">✦ ✦ ✦</div>
+      </div>
+
+      <!-- INVITATION TEXT (OPTION 2 REPHRASED TEXT) -->
+      <div class="invitation-desc">
+        19-08-2026 బుధవారం ఉదయం 4:15 నుండి 6:15 గంటల శుభ ముహూర్తంలో మా నూతన గృహప్రవేశ మహోత్సవం జరుగుతుంది. కావున మీరందరూ కుటుంబసమేతంగా వచ్చి, మా ఆతిథ్యాన్ని స్వీకరించి మమ్మల్ని ఆశీర్వదించాల్సిందిగా వేడుకుంటున్నాము.
+      </div>
+
+      <!-- Event Date -->
+      <div class="date-text">
+        📅 బుధవారం, 19 ఆగస్టు 2026
+      </div>
+
+      <!-- LIVE COUNTDOWN TIMER -->
+      <div class="timer-container" id="countdownTimer">
+        <div class="timer-unit">
+          <span class="timer-value" id="timerDays">00</span>
+          <span class="timer-label">రోజులు</span>
+        </div>
+        <div class="timer-unit">
+          <span class="timer-value" id="timerHours">00</span>
+          <span class="timer-label">గంటలు</span>
+        </div>
+        <div class="timer-unit">
+          <span class="timer-value" id="timerMins">00</span>
+          <span class="timer-label">నిమిషాలు</span>
+        </div>
+        <div class="timer-unit">
+          <span class="timer-value" id="timerSecs">00</span>
+          <span class="timer-label">సెకన్లు</span>
+        </div>
+      </div>
+
+      <!-- VISUAL SCROLL DOWN SYMBOL -->
+      <div class="scroll-hint-indicator">
+        <span>కిందికి స్క్రోల్ చేయండి</span>
+        <span class="scroll-arrow">↓</span>
+      </div>
+
+      <!-- Auspicious Program Schedule -->
+      <div class="schedule-block">
+        <div class="section-heading">కార్యక్రమాలు</div>
+        
+        <div class="schedule-item">
+          <div class="event-time">ఉదయం 04:15 - 06:15 ని॥ల లోపు</div>
+          <div class="event-name">గృహప్రవేశం (కర్కాటక లగ్నము)</div>
+        </div>
+
+        <div class="schedule-divider"></div>
+
+        <div class="schedule-item">
+          <div class="event-time">ఉదయం 09:30 ని॥ల నుండి</div>
+          <div class="event-name">శ్రీ సత్యనారాయణస్వామి వ్రతము</div>
+        </div>
+
+        <div class="schedule-divider"></div>
+
+        <div class="schedule-item">
+          <div class="event-time">మధ్యాహ్నం 12:30 ని॥లకు</div>
+          <div class="event-name">విందు</div>
+        </div>
+      </div>
+
+      <!-- Venue & Navigation -->
+      <div class="venue-block">
+        <div class="section-heading">వేదిక వివరాలు</div>
+        <div class="venue-address">
+          <strong>House 3, రాజహంస హోమ్స్</strong><br>
+          నరిగమ్మ గుడి దగ్గర, కళ్యాణదుర్గం రోడ్, అనంతపురము.
+        </div>
+        
+        <a href="https://maps.app.goo.gl/UtDtkRgg9UCZnwtU8?g_st=ac" target="_blank" class="btn-map">
+          📍 లొకేషన్ చూడండి
+        </a>
+      </div>
+
+      <!-- Host Contact Info with Host Names on separate lines -->
+      <div class="contact-block">
+        <div class="contact-label">ఆహ్వానించువారు</div>
+        <div class="host-name-clean">
+          <div>శ్రీ పి. చిన్నమాదన్న యాదవ్</div>
+          <div>శ్రీమతి పి. నాగమణి</div>
+        </div>
+        <div class="contact-buttons">
+          <a href="tel:8309973077" class="phone-btn">📞 8309973077</a>
+          <a href="tel:7993583855" class="phone-btn">📞 7993583855</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function openDoor() {
+      const doorWrapper = document.getElementById('door-wrapper');
+      const tapHint = document.getElementById('tapHint');
+      const doorHeaderText = document.getElementById('doorHeaderText');
+      const doorMiddleText = document.getElementById('doorMiddleText');
+      const scrollOverlay = document.getElementById('scrollOverlay');
+      
+      if (tapHint) tapHint.style.opacity = '0';
+      if (doorHeaderText) doorHeaderText.style.opacity = '0';
+      if (doorMiddleText) doorMiddleText.style.opacity = '0';
+
+      doorWrapper.classList.add('zooming');
+
+      setTimeout(() => {
+        doorWrapper.classList.add('open');
+        scrollOverlay.style.overflowY = 'auto';
+        showerBlessings();
+      }, 1500);
+
+      setTimeout(() => {
+        doorWrapper.classList.add('fade-out');
+        doorWrapper.style.display = 'none';
+      }, 3600);
+    }
+
+    /* COUNTDOWN TIMER FUNCTION */
+    function initCountdown() {
+      const targetDate = new Date('August 19, 2026 04:15:00').getTime();
+
+      function updateTimer() {
+        const now = new Date().getTime();
+        const difference = targetDate - now;
+
+        if (difference <= 0) {
+          document.getElementById('countdownTimer').innerHTML = 
+            "<div style='font-family: Ramabhadra, serif; color: #7a0c0c; font-weight: 600; font-size: 1rem;'>✦ శుభ కార్యక్రమము ప్రారంభమైనది ✦</div>";
+          return;
+        }
+
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        document.getElementById('timerDays').innerText = String(days).padStart(2, '0');
+        document.getElementById('timerHours').innerText = String(hours).padStart(2, '0');
+        document.getElementById('timerMins').innerText = String(minutes).padStart(2, '0');
+        document.getElementById('timerSecs').innerText = String(seconds).padStart(2, '0');
+      }
+
+      updateTimer();
+      setInterval(updateTimer, 1000);
+    }
+
+    // Initialize timer on load
+    initCountdown();
+
+    /* PETAL & BLESSING SHOWER FUNCTION */
+    function showerBlessings() {
+      const items = ['🌸', '🌹', '🌼', '✨', '🎉'];
+      const totalPetals = 35;
+
+      for (let i = 0; i < totalPetals; i++) {
+        setTimeout(() => {
+          const petal = document.createElemen
