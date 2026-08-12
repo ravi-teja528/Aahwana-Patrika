@@ -52,8 +52,6 @@
       background-image: url('1000197031.jpg');
       background-size: 100vw 100vh;
       background-repeat: no-repeat;
-      transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
-      -webkit-transition: -webkit-transform 2.2s cubic-bezier(0.25, 1, 0.5, 1);
       position: relative;
       will-change: transform;
       backface-visibility: visible;
@@ -72,15 +70,51 @@
       -webkit-transform-origin: right center;
     }
 
-    /* HYBRID 3D ROTATION & SLIDE OUT (GUARANTEED OPENING) */
+    /* KEYFRAME ANIMATION FOR GUARANTEED DOOR OPENING */
     #door-wrapper.open .door-left {
-      transform: translateX(-100%) rotateY(-95deg);
-      -webkit-transform: translateX(-100%) rotateY(-95deg);
+      animation: doorOpenLeft 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      -webkit-animation: doorOpenLeft 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
     #door-wrapper.open .door-right {
-      transform: translateX(100%) rotateY(95deg);
-      -webkit-transform: translateX(100%) rotateY(95deg);
+      animation: doorOpenRight 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      -webkit-animation: doorOpenRight 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes doorOpenLeft {
+      0% {
+        transform: rotateY(0deg) translateX(0);
+      }
+      100% {
+        transform: rotateY(-110deg) translateX(-100%);
+      }
+    }
+
+    @-webkit-keyframes doorOpenLeft {
+      0% {
+        -webkit-transform: rotateY(0deg) translateX(0);
+      }
+      100% {
+        -webkit-transform: rotateY(-110deg) translateX(-100%);
+      }
+    }
+
+    @keyframes doorOpenRight {
+      0% {
+        transform: rotateY(0deg) translateX(0);
+      }
+      100% {
+        transform: rotateY(110deg) translateX(100%);
+      }
+    }
+
+    @-webkit-keyframes doorOpenRight {
+      0% {
+        -webkit-transform: rotateY(0deg) translateX(0);
+      }
+      100% {
+        -webkit-transform: rotateY(110deg) translateX(100%);
+      }
     }
 
     #door-wrapper.fade-out {
@@ -691,7 +725,7 @@
       if (doorHeaderText) doorHeaderText.style.opacity = '0';
       if (doorMiddleText) doorMiddleText.style.opacity = '0';
 
-      // 2. Start combined zoom & 3D door opening immediately on tap (0ms delay)
+      // 2. Trigger keyframe door opening animation
       if (doorWrapper) doorWrapper.classList.add('open');
       if (scrollOverlay) scrollOverlay.style.overflowY = 'auto';
 
@@ -702,28 +736,4 @@
         if (doorWrapper) {
           doorWrapper.classList.add('fade-out');
           setTimeout(function() {
-            doorWrapper.style.display = 'none';
-          }, 800);
-        }
-      }, 2200);
-    }
-
-    // Explicit binding for mobile touch devices
-    function attachDoorEvents() {
-      var wrapper = document.getElementById('door-wrapper');
-      if (wrapper) {
-        wrapper.addEventListener('click', openDoor, false);
-        wrapper.addEventListener('touchstart', openDoor, { passive: true });
-      }
-    }
-
-    /* COUNTDOWN TIMER FUNCTION */
-    function initCountdown() {
-      var targetDate = new Date('2026-08-19T04:15:00').getTime();
-
-      function updateTimer() {
-        var now = new Date().getTime();
-        var difference = targetDate - now;
-
-        if (difference <= 0) {
-          var timer
+            doorWrapper.style
