@@ -35,16 +35,20 @@
       height: 100vh;
       z-index: 9999;
       perspective: 1500px;
+      -webkit-perspective: 1500px;
       display: flex;
       cursor: pointer;
       overflow: hidden;
       transform-origin: center center;
       transition: transform 1.6s ease-in-out, opacity 0.8s ease;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* Smooth 30% Zoom */
     #door-wrapper.zooming {
       transform: scale(1.3);
+      -webkit-transform: scale(1.3);
     }
 
     .door {
@@ -54,26 +58,33 @@
       background-size: 100vw 100vh;
       background-repeat: no-repeat;
       transition: transform 2.2s cubic-bezier(0.35, 0, 0.25, 1);
+      -webkit-transition: -webkit-transform 2.2s cubic-bezier(0.35, 0, 0.25, 1);
       position: relative;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
     .door-left {
       background-position: left center;
       transform-origin: left center;
+      -webkit-transform-origin: left center;
     }
 
     .door-right {
       background-position: right center;
       transform-origin: right center;
+      -webkit-transform-origin: right center;
     }
 
     /* 3D Door Opening */
     #door-wrapper.open .door-left {
       transform: rotateY(-115deg);
+      -webkit-transform: rotateY(-115deg);
     }
 
     #door-wrapper.open .door-right {
       transform: rotateY(115deg);
+      -webkit-transform: rotateY(115deg);
     }
 
     #door-wrapper.fade-out {
@@ -87,6 +98,7 @@
       top: 6%;
       left: 50%;
       transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
       font-family: 'Ramabhadra', serif;
       font-size: 1.6rem;
       font-weight: 700;
@@ -113,12 +125,13 @@
       text-shadow: 0 0 10px rgba(255, 252, 240, 0.95), 0 0 15px rgba(255, 245, 210, 0.9);
     }
 
-    /* PLAIN TEXT IN MIDDLE OF DOOR (NO BOX/CARD WRAPPER) */
+    /* PLAIN TEXT IN MIDDLE OF DOOR */
     .door-middle-text {
       position: absolute;
       top: 62%;
       left: 50%;
       transform: translate(-50%, -50%);
+      -webkit-transform: translate(-50%, -50%);
       font-family: 'Ramabhadra', serif;
       font-size: 1.25rem;
       font-weight: 700;
@@ -150,6 +163,7 @@
       bottom: 9%;
       left: 50%;
       transform: translateX(-50%);
+      -webkit-transform: translateX(-50%);
       background: linear-gradient(135deg, #7a0c0c, #4a0505);
       color: #fff3d1;
       padding: 12px 30px;
@@ -531,7 +545,7 @@
 <body>
 
   <!-- Fullscreen 3D Door Overlay -->
-  <div id="door-wrapper" onclick="openDoor()">
+  <div id="door-wrapper" onclick="openDoor()" ontouchstart="openDoor()">
     <div class="door-header-text" id="doorHeaderText">
       పెనకచెర్ల వారి
       <span>నూతన గృహప్రవేశ ఆహ్వానం</span>
@@ -547,7 +561,7 @@
     <div class="door door-left"></div>
     <div class="door door-right"></div>
     
-    <div class="tap-hint" id="tapHint">తెరవడానికి ఇక్కడ తాకండి</div>
+    <div class="tap-hint" id="tapHint">ఇక్కడ తాకండి</div>
   </div>
 
   <!-- FIXED STAY-STILL BACKGROUND -->
@@ -663,7 +677,12 @@
   </div>
 
   <script>
+    var doorOpened = false;
+
     function openDoor() {
+      if (doorOpened) return;
+      doorOpened = true;
+
       const doorWrapper = document.getElementById('door-wrapper');
       const tapHint = document.getElementById('tapHint');
       const doorHeaderText = document.getElementById('doorHeaderText');
@@ -674,17 +693,19 @@
       if (doorHeaderText) doorHeaderText.style.opacity = '0';
       if (doorMiddleText) doorMiddleText.style.opacity = '0';
 
-      doorWrapper.classList.add('zooming');
+      if (doorWrapper) doorWrapper.classList.add('zooming');
 
       setTimeout(() => {
-        doorWrapper.classList.add('open');
-        scrollOverlay.style.overflowY = 'auto';
+        if (doorWrapper) doorWrapper.classList.add('open');
+        if (scrollOverlay) scrollOverlay.style.overflowY = 'auto';
         showerBlessings();
       }, 1500);
 
       setTimeout(() => {
-        doorWrapper.classList.add('fade-out');
-        doorWrapper.style.display = 'none';
+        if (doorWrapper) {
+          doorWrapper.classList.add('fade-out');
+          doorWrapper.style.display = 'none';
+        }
       }, 3600);
     }
 
@@ -697,34 +718,13 @@
         const difference = targetDate - now;
 
         if (difference <= 0) {
-          document.getElementById('countdownTimer').innerHTML = 
-            "<div style='font-family: Ramabhadra, serif; color: #7a0c0c; font-weight: 600; font-size: 1rem;'>✦ శుభ కార్యక్రమము ప్రారంభమైనది ✦</div>";
+          const timerElem = document.getElementById('countdownTimer');
+          if (timerElem) {
+            timerElem.innerHTML = "<div style='font-family: Ramabhadra, serif; color: #7a0c0c; font-weight: 600; font-size: 1rem;'>✦ శుభ కార్యక్రమము ప్రారంభమైనది ✦</div>";
+          }
           return;
         }
 
         const days = Math.floor(difference / (1000 * 60 * 60 * 24));
         const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-        document.getElementById('timerDays').innerText = String(days).padStart(2, '0');
-        document.getElementById('timerHours').innerText = String(hours).padStart(2, '0');
-        document.getElementById('timerMins').innerText = String(minutes).padStart(2, '0');
-        document.getElementById('timerSecs').innerText = String(seconds).padStart(2, '0');
-      }
-
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    }
-
-    // Initialize timer on load
-    initCountdown();
-
-    /* PETAL & BLESSING SHOWER FUNCTION */
-    function showerBlessings() {
-      const items = ['🌸', '🌹', '🌼', '✨', '🎉'];
-      const totalPetals = 35;
-
-      for (let i = 0; i < totalPetals; i++) {
-        setTimeout(() => {
-          const petal = document.createElemen
+        const minutes = Math.floor((difference 
